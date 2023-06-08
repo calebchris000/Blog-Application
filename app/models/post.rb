@@ -8,6 +8,9 @@ class Post < ApplicationRecord
   validates :comment_counter, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :likes_counter, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
+  attribute :comment_counter, :integer, default: 0
+  attribute :likes_counter, :integer, default: 0
+
   def top_5_comment
     comments.order(created_at: :desc).limit(5)
   end
