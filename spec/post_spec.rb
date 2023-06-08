@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 RSpec.describe Post, type: :model do
   let(:author) { Author.create(name: 'Caleb', photo: 'photo.com', bio: 'Full Stack Dev') }
   subject { Post.new(title: 'The Crisis of Modern School System', text: 'The school system is...', author:) }

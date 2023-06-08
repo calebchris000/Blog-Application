@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 RSpec.describe Comment, type: :model do
   let(:author1) { Author.create(name: 'Caleb', photo: 'photo.com', bio: 'Software Developer') }
   let(:author2) { Author.create(name: 'Daniel', photo: 'photo.com', bio: 'Advocate for Improvement') }
