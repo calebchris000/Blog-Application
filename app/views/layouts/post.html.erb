@@ -1,0 +1,10 @@
+<h2>Here is a list of posts for a given user</h2>
+<% if @posts.any?%>
+<ul>
+<%@posts.each do |post| %>
+<li>post</li>
+<%end%>
+</ul>
+<%else%>
+<p>There are currently no posts at this time.</p>
+<%end%>
