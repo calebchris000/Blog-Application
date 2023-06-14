@@ -1,5 +1,9 @@
-class AuthorsController < ApplicationController::Base
-  def index; end
+class AuthorsController < ActionController::Base
+  def index
+    # Where the index logic goes
+  end
 
-  def show; end
+  def show
+    # Where the show logic goes
+  end
 end
