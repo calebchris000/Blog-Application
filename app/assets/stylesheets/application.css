@@ -3,6 +3,7 @@
 * {
   font-family: "Poppins", sans-serif;
 }
+
 .users {
   margin: 5rem 3rem;
 }
@@ -35,6 +36,7 @@
 .user_info > h2 {
   align-self: center;
 }
+
 .number_posts {
   align-self: flex-end;
   display: flex;
@@ -43,9 +45,11 @@
 .number_posts > p {
   font-weight: 500;
 }
+
 .posts {
   margin: 5rem 3rem;
 }
+
 .post_container {
   display: flex;
   border: 2px solid black;
@@ -99,18 +103,14 @@
 
 .expanded_post {
   border: 2px solid black;
+  margin: 0 auto;
   margin-bottom: 2rem;
   max-width: 70%;
-  margin: 0 auto;
+  border-bottom: 2px solid;
 }
 
 .comment > p {
   margin: 5px;
-}
-
-.expanded_post {
-  border-bottom: 2px solid;
- 
 }
 
 .post_text {
@@ -122,7 +122,7 @@
   padding: 0 4rem;
   border: 2px solid;
   margin: 0 auto;
-  margin-bottom: 6rem
+  margin-bottom: 6rem;
 }
 
 .post_traffic {
