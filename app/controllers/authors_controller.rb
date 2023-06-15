@@ -4,7 +4,7 @@ class AuthorsController < ActionController::Base
     @authors = Author.all
     @author_posts = Post.all
   end
-  
+
   def show
     @current_user_id = params[:id].to_i
     @current_user = Author.find(@current_user_id)
