@@ -1,1 +1,5 @@
-<p>This is the show template!</p>
+<%= stylesheet_link_tag "application.css", "data-turbo-track": "reload" %>
+<section class="comment_wrapper">
+<%= render '/posts/shared/expandedpost' %>
+</section>
+<%= render '/posts/shared/comment' %>

@@ -1,1 +1,13 @@
-<p>This is the show template!</p>
+<%= stylesheet_link_tag "application.css", "data-turbo-track": "reload" %>
+
+<div class="posts">
+<%= render '/authors/shared/user'%>
+<%= render '/posts/shared/bio' %>
+<section class="user_posts">
+<%= render '/authors/shared/posts'%>
+</section>
+<div class="more_post_container">
+<button class="see_all_posts">See all posts</button>
+</div>
+
+</div>

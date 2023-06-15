@@ -1,0 +1,14 @@
+      <% @authors.each do |author| %>
+<section class="user_container">
+    <div class="img_container"> 
+      <%= image_tag("user.jpeg", alt: 'profile image') %>
+    </div>
+
+      <div class="user_info">
+        <h2><%= author.name %></h2>
+        <div class="number_posts">
+          <p>Number of posts: <%= @author_posts.where(author_id: author.id).length %> </p>
+        </div>
+      </div>
+    </section>
+        <% end %>
