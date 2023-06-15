@@ -1,0 +1,11 @@
+<% @total_posts.each do |post| %>
+ <section class="post_container">
+      <div>
+      <p class="post_number"><%= post.title %></p>
+      </div>
+      <div><%= post.text %></div>
+      <div class="comments_likes">
+        <p>Comments: X Likes: y</p>
+      </div>
+    </section>
+    <% end %>

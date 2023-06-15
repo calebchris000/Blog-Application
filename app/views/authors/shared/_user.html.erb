@@ -1,0 +1,12 @@
+<section class="user_container">
+    <div class="img_container"> 
+      <%= image_tag("user.jpeg", alt: 'profile image') %>
+    </div>
+
+      <div class="user_info">
+        <h2><%= @current_user.name %></h2>
+        <div class="number_posts">
+          <p>Number of posts: <%= @total_posts.length %> </p>
+        </div>
+      </div>
+    </section>
