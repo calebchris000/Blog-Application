@@ -3,9 +3,15 @@
 <div class="post_traffic">
 <div class="metadata">
 <p>Post 1 by #<%= @current_user.name%></p>
-<p>Like: <%= @focused_post[0].likes_counter%>, Comment: <%= @focused_post[0].comment_counter%></p>
+<p>Like: <%= @post.likes_counter%>, Comment: <%= @post.comment_counter%></p>
 </div>
 
-<p><%= @focused_post[0].text %></p>
+<p><%= @post.text %></p>
 </div>
+</div>
+</div>
+ <div class="comment_container">
+<% @total_comments.each do  |comment| %>
+<p><strong><%= Author.find(comment.author_id).name%>:</strong> <%= comment.text %> </p>
+<% end %>
 </div>
