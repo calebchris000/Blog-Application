@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   def index
-    @focused_user = Author.find(params[:id])
+    @focused_user = Author.find(params[:author_id])
     @total_posts = @focused_user.posts
   end
 
@@ -23,18 +23,9 @@ class PostsController < ApplicationController
     @current_user = @post.author
   end
 
-  def like
-    @get_current_post = params[:id]
-    @get_current_post_author = params[:author_id]
-    @likes = Post.find(@get_current_post)
-    @likes.likes_counter += 1
-    @likes.save
-    redirect_to "/authors/#{@get_current_post_author}/posts"
-  end
-
   private
 
   def post_params
-    params.require(:post).permit(:title, :text, :id)
+    params.require(:post).permit(:title, :text, :author_id)
   end
 end

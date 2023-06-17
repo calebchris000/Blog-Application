@@ -1,11 +1,12 @@
 <% @total_posts.each do |post| %>
+<%= link_to({controller: 'posts', action: 'show', id: post.id}) do %>
  <section class="post_container">
       <div>
       <p class="post_number"><%= post.title %></p>
       </div>
       <div><%= post.text %></div>
       <div class="comments_likes">
-        <p>Comments: <%= post.comment_counter %> Likes: <%= post.likes_counter%><%= link_to "Like", {controller: 'posts', action: 'like', id: post.id, author_id: post.author_id}, class: 'like' %></p>
+        <p>Comments: <%= post.comment_counter %> Likes: <%= post.likes_counter%><%= link_to "Like", {controller: 'likes', action: 'create', post_id: post.id, author_id: post.author_id}, class: 'like' %></p>
       </div>
     </section>
     <div class="comment_container">
@@ -13,4 +14,6 @@
 <p><strong><%= Author.find(comment.author_id).name%>:</strong> <%= comment.text %> </p>
 <% end %>
 </div>
+    <% end %>
+
     <% end %>

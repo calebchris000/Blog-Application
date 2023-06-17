@@ -2,3 +2,5 @@
 <section class="comment_wrapper">
 <%= render '/posts/shared/expandedpost' %>
 </section>
+
+<%= link_to "Create New Comment", new_author_post_comment_path(post_id: params[:id]), class: "new_post" %>
