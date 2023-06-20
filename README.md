@@ -170,6 +170,12 @@ Example command:
 - Twitter: [@twitterhandle](https://twitter.com/calebchris000)
 - LinkedIn: [LinkedIn](https://linkedin.com/in/calebchris000)
 
+👤 **George M'sapenda**
+
+- GitHub: [@c00p75](https://github.com/c00p75)
+- LinkedIn: [LinkedIn](https://www.linkedin.com/in/georgemsapenda/)
+
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- FUTURE FEATURES -->
