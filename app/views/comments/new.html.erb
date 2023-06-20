@@ -1,0 +1,5 @@
+<%= form_with model: Comment.new, url: comment_path do |f|%>
+<%= f.label :text, 'Comment' %>
+<%= f.text_field :text %>
+<%= f.submit 'Submit'%>
+<% end %>

@@ -2,6 +2,5 @@
 <section class="comment_section">
 <%= render '/posts/shared/user' %>
 <%= render '/posts/shared/posts' %>
-<div class="comment_container">
-<%= render '/posts/shared/comment' %>
 </section>
+<%= link_to "Create New Post", 'posts/new', class: "new_post" %>

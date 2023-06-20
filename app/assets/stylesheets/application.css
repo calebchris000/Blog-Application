@@ -2,6 +2,8 @@
 
 * {
   font-family: "Poppins", sans-serif;
+  text-decoration: none;
+  color: black;
 }
 
 .users {
@@ -55,9 +57,10 @@
   border: 2px solid black;
   flex-direction: column;
   padding: 0 4rem;
-  max-width: 70%;
+  width: 70%;
   margin: 0 auto;
   margin-top: 1rem;
+  cursor: pointer;
 }
 
 .bio {
@@ -141,4 +144,24 @@
 .metadata {
   display: flex;
   justify-content: space-between;
+}
+
+.new_post {
+  margin: 0 auto;
+  border: 0;
+  background-color: black;
+  color: white;
+  padding: 1rem 2rem;
+  display: block;
+  width: fit-content;
+}
+
+.like {
+  text-decoration: none;
+  border: 2px solid #ff7b00;
+  background-color: #ff7b00;
+  padding: 0.1rem 0.5rem;
+  margin: 0 10px;
+  color: white;
+  font-weight: 600;
 }
