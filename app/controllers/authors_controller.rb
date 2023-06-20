@@ -1,4 +1,5 @@
-class AuthorsController < ActionController::Base
+class AuthorsController < ApplicationController
+
   def index
     # Where the index logic goes
     @authors = Author.all

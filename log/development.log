@@ -1,0 +1,1218 @@
+  [1m[35m (28.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (9.0ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (2.1ms)[0m  [1m[34mSELECT pg_try_advisory_lock(738905053243825545)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (1.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateAuthor (20230606132804)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (13.7ms)[0m  [1m[35mCREATE TABLE "authors" ("id" bigserial primary key, "name" character varying, "photo" text, "bio" text, "timestamp" character varying, "post_counter" integer, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (1.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230606132804"]]
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreatePost (20230606140040)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (18.4ms)[0m  [1m[35mCREATE TABLE "posts" ("id" bigserial primary key, "title" character varying, "text" text, "timestamp" character varying, "comment_counter" integer, "likes_counter" integer, "author_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_04d13ef8c7"
+FOREIGN KEY ("author_id")
+  REFERENCES "authors" ("id")
+)[0m
+  [1m[35m (2.5ms)[0m  [1m[35mCREATE INDEX "index_posts_on_author_id" ON "posts" ("author_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (1.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230606140040"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateLike (20230606140456)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (14.4ms)[0m  [1m[35mCREATE TABLE "likes" ("id" bigserial primary key, "timestamp" character varying, "author_id" bigint NOT NULL, "posts_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_1f2302367a"
+FOREIGN KEY ("author_id")
+  REFERENCES "authors" ("id")
+, CONSTRAINT "fk_rails_b1afef8225"
+FOREIGN KEY ("posts_id")
+  REFERENCES "posts" ("id")
+)[0m
+  [1m[35m (2.4ms)[0m  [1m[35mCREATE INDEX "index_likes_on_author_id" ON "likes" ("author_id")[0m
+  [1m[35m (3.5ms)[0m  [1m[35mCREATE INDEX "index_likes_on_posts_id" ON "likes" ("posts_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.9ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230606140456"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateComment (20230606175404)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (13.4ms)[0m  [1m[35mCREATE TABLE "comments" ("id" bigserial primary key, "text" text, "timestamps" character varying, "author_id" bigint NOT NULL, "post_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_f44b1e3c8a"
+FOREIGN KEY ("author_id")
+  REFERENCES "authors" ("id")
+, CONSTRAINT "fk_rails_2fd19c0db7"
+FOREIGN KEY ("post_id")
+  REFERENCES "posts" ("id")
+)[0m
+  [1m[35m (3.0ms)[0m  [1m[35mCREATE INDEX "index_comments_on_author_id" ON "comments" ("author_id")[0m
+  [1m[35m (3.7ms)[0m  [1m[35mCREATE INDEX "index_comments_on_post_id" ON "comments" ("post_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230606175404"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddDeviseToAuthors (20230620173452)
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (1.8ms)[0m  [1m[35mALTER TABLE "authors" ADD "email" character varying DEFAULT '' NOT NULL[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "authors" ADD "encrypted_password" character varying DEFAULT '' NOT NULL[0m
+  [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "authors" ADD "reset_password_token" character varying[0m
+  [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "authors" ADD "reset_password_sent_at" timestamp(6)[0m
+  [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "authors" ADD "remember_created_at" timestamp(6)[0m
+  [1m[35m (3.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_authors_on_email" ON "authors" ("email")[0m
+  [1m[35m (3.3ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_authors_on_reset_password_token" ON "authors" ("reset_password_token")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230620173452"]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (1.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (2.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2023-06-20 17:36:47.950505"], ["updated_at", "2023-06-20 17:36:47.950505"]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_advisory_unlock(738905053243825545)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (1.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/" for 127.0.0.1 at 2023-06-20 18:38:51 +0100
+  [1m[36mActiveRecord::SchemaMigration Pluck (4.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendering C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/railties-7.0.5/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/railties-7.0.5/lib/rails/templates/rails/welcome/index.html.erb (Duration: 58.3ms | Allocations: 694)
+Completed 200 OK in 343ms (Views: 92.3ms | ActiveRecord: 0.0ms | Allocations: 9367)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:39:06 +0100
+Processing by AuthorsController#index as HTML
+Completed 401 Unauthorized in 56ms (ActiveRecord: 0.0ms | Allocations: 5189)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:39:06 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/sessions/new.html.erb within layouts/application
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/shared/_links.html.erb (Duration: 55.2ms | Allocations: 721)
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/sessions/new.html.erb within layouts/application (Duration: 174.5ms | Allocations: 4692)
+  Rendered layout layouts/application.html.erb (Duration: 1980.4ms | Allocations: 99793)
+Completed 200 OK in 2076ms (Views: 2026.1ms | ActiveRecord: 9.1ms | Allocations: 109888)
+
+
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 18:39:13 +0100
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/registrations/new.html.erb within layouts/application
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/shared/_error_messages.html.erb (Duration: 17.6ms | Allocations: 235)
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/shared/_links.html.erb (Duration: 1.2ms | Allocations: 155)
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/registrations/new.html.erb within layouts/application (Duration: 66.9ms | Allocations: 2089)
+  Rendered layout layouts/application.html.erb (Duration: 84.9ms | Allocations: 4285)
+Completed 200 OK in 104ms (Views: 96.4ms | ActiveRecord: 0.0ms | Allocations: 5420)
+
+
+Started POST "/authors" for 127.0.0.1 at 2023-06-20 18:39:30 +0100
+Processing by Devise::RegistrationsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "author"=>{"email"=>"calebchris000@gmail.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuthor Exists? (3.9ms)[0m  [1m[34mSELECT 1 AS one FROM "authors" WHERE "authors"."email" = $1 LIMIT $2[0m  [["email", "calebchris000@gmail.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  Rendering layout layouts/application.html.erb
+  Rendering C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/registrations/new.html.erb within layouts/application
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/shared/_error_messages.html.erb (Duration: 1.4ms | Allocations: 927)
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 78)
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/devise-4.9.2/app/views/devise/registrations/new.html.erb within layouts/application (Duration: 4.8ms | Allocations: 2105)
+  Rendered layout layouts/application.html.erb (Duration: 17.2ms | Allocations: 4251)
+Completed 422 Unprocessable Entity in 424ms (Views: 18.3ms | ActiveRecord: 4.7ms | Allocations: 14691)
+
+
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 18:41:40 +0100
+  [1m[35m (16.9ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (8.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (1.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActiveRecord::PendingMigrationError (
+
+Migrations are pending. To resolve this issue, run:
+
+        bin/rails db:migrate RAILS_ENV=development
+
+You have 5 pending migrations:
+
+20230606132804_create_author.rb
+20230606140040_create_post.rb
+20230606140456_create_like.rb
+20230606175404_create_comment.rb
+20230620173452_add_devise_to_authors.rb
+
+
+):
+  
+activerecord (7.0.5) lib/active_record/migration.rb:627:in `check_pending!'
+activerecord (7.0.5) lib/active_record/migration.rb:592:in `block (2 levels) in call'
+activesupport (7.0.5) lib/active_support/file_update_checker.rb:83:in `execute'
+activesupport (7.0.5) lib/active_support/file_update_checker.rb:93:in `execute_if_updated'
+activerecord (7.0.5) lib/active_record/migration.rb:599:in `block in call'
+activerecord (7.0.5) lib/active_record/migration.rb:589:in `synchronize'
+activerecord (7.0.5) lib/active_record/migration.rb:589:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/callbacks.rb:27:in `block in call'
+activesupport (7.0.5) lib/active_support/callbacks.rb:99:in `run_callbacks'
+actionpack (7.0.5) lib/action_dispatch/middleware/callbacks.rb:26:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/actionable_exceptions.rb:17:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/debug_exceptions.rb:28:in `call'
+web-console (4.2.0) lib/web_console/middleware.rb:132:in `call_app'
+web-console (4.2.0) lib/web_console/middleware.rb:28:in `block in call'
+web-console (4.2.0) lib/web_console/middleware.rb:17:in `catch'
+web-console (4.2.0) lib/web_console/middleware.rb:17:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/show_exceptions.rb:26:in `call'
+railties (7.0.5) lib/rails/rack/logger.rb:40:in `call_app'
+railties (7.0.5) lib/rails/rack/logger.rb:25:in `block in call'
+activesupport (7.0.5) lib/active_support/tagged_logging.rb:99:in `block in tagged'
+activesupport (7.0.5) lib/active_support/tagged_logging.rb:37:in `tagged'
+activesupport (7.0.5) lib/active_support/tagged_logging.rb:99:in `tagged'
+railties (7.0.5) lib/rails/rack/logger.rb:25:in `call'
+sprockets-rails (3.4.2) lib/sprockets/rails/quiet_assets.rb:13:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/remote_ip.rb:93:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/request_id.rb:26:in `call'
+rack (2.2.7) lib/rack/method_override.rb:24:in `call'
+rack (2.2.7) lib/rack/runtime.rb:22:in `call'
+activesupport (7.0.5) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/server_timing.rb:61:in `block in call'
+actionpack (7.0.5) lib/action_dispatch/middleware/server_timing.rb:26:in `collect_events'
+actionpack (7.0.5) lib/action_dispatch/middleware/server_timing.rb:60:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/executor.rb:14:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/static.rb:23:in `call'
+rack (2.2.7) lib/rack/sendfile.rb:110:in `call'
+actionpack (7.0.5) lib/action_dispatch/middleware/host_authorization.rb:137:in `call'
+railties (7.0.5) lib/rails/engine.rb:530:in `call'
+puma (5.6.5) lib/puma/configuration.rb:252:in `call'
+puma (5.6.5) lib/puma/request.rb:77:in `block in handle_request'
+puma (5.6.5) lib/puma/thread_pool.rb:340:in `with_force_shutdown'
+puma (5.6.5) lib/puma/request.rb:76:in `handle_request'
+puma (5.6.5) lib/puma/server.rb:443:in `process_client'
+puma (5.6.5) lib/puma/thread_pool.rb:147:in `block in spawn_thread'
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT pg_try_advisory_lock(738905053243825545)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (2.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateAuthor (20230606132804)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (19.4ms)[0m  [1m[35mCREATE TABLE "authors" ("id" bigserial primary key, "name" character varying, "photo" text, "bio" text, "timestamp" character varying, "post_counter" integer DEFAULT 0, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (1.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230606132804"]]
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreatePost (20230606140040)
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (14.7ms)[0m  [1m[35mCREATE TABLE "posts" ("id" bigserial primary key, "title" character varying, "text" text, "timestamp" character varying, "comment_counter" integer, "likes_counter" integer, "author_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_04d13ef8c7"
+FOREIGN KEY ("author_id")
+  REFERENCES "authors" ("id")
+)[0m
+  [1m[35m (3.3ms)[0m  [1m[35mCREATE INDEX "index_posts_on_author_id" ON "posts" ("author_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230606140040"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateLike (20230606140456)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (24.7ms)[0m  [1m[35mCREATE TABLE "likes" ("id" bigserial primary key, "timestamp" character varying, "author_id" bigint NOT NULL, "posts_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_1f2302367a"
+FOREIGN KEY ("author_id")
+  REFERENCES "authors" ("id")
+, CONSTRAINT "fk_rails_b1afef8225"
+FOREIGN KEY ("posts_id")
+  REFERENCES "posts" ("id")
+)[0m
+  [1m[35m (5.1ms)[0m  [1m[35mCREATE INDEX "index_likes_on_author_id" ON "likes" ("author_id")[0m
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE INDEX "index_likes_on_posts_id" ON "likes" ("posts_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.9ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230606140456"]]
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateComment (20230606175404)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (11.1ms)[0m  [1m[35mCREATE TABLE "comments" ("id" bigserial primary key, "text" text, "timestamps" character varying, "author_id" bigint NOT NULL, "post_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_f44b1e3c8a"
+FOREIGN KEY ("author_id")
+  REFERENCES "authors" ("id")
+, CONSTRAINT "fk_rails_2fd19c0db7"
+FOREIGN KEY ("post_id")
+  REFERENCES "posts" ("id")
+)[0m
+  [1m[35m (2.4ms)[0m  [1m[35mCREATE INDEX "index_comments_on_author_id" ON "comments" ("author_id")[0m
+  [1m[35m (3.1ms)[0m  [1m[35mCREATE INDEX "index_comments_on_post_id" ON "comments" ("post_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230606175404"]]
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddDeviseToAuthors (20230620173452)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "authors" ADD "email" character varying DEFAULT '' NOT NULL[0m
+  [1m[35m (0.8ms)[0m  [1m[35mALTER TABLE "authors" ADD "encrypted_password" character varying DEFAULT '' NOT NULL[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "authors" ADD "reset_password_token" character varying[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "authors" ADD "reset_password_sent_at" timestamp(6)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "authors" ADD "remember_created_at" timestamp(6)[0m
+  [1m[35m (2.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_authors_on_email" ON "authors" ("email")[0m
+  [1m[35m (5.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_authors_on_reset_password_token" ON "authors" ("reset_password_token")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (1.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20230620173452"]]
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (1.6ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (1.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2023-06-20 17:42:08.544315"], ["updated_at", "2023-06-20 17:42:08.544315"]]
+  [1m[36mTRANSACTION (0.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT pg_advisory_unlock(738905053243825545)[0m
+  [1m[36mActiveRecord::SchemaMigration Pluck (2.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 18:42:11 +0100
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 2.9ms | Allocations: 227)
+  Rendered devise/shared/_links.html.erb (Duration: 2.3ms | Allocations: 527)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 56.0ms | Allocations: 2750)
+  Rendered layout layouts/application.html.erb (Duration: 116.7ms | Allocations: 16394)
+Completed 200 OK in 157ms (Views: 135.1ms | ActiveRecord: 5.7ms | Allocations: 21326)
+
+
+Started POST "/authors" for 127.0.0.1 at 2023-06-20 18:43:16 +0100
+Processing by Devise::RegistrationsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "author"=>{"email"=>"calebchris000@gmail.com", "name"=>"Caleb Nwaizu", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+[31mUnpermitted parameter: :name. Context: { controller: Devise::RegistrationsController, action: create, request: #<ActionDispatch::Request:0x0000023b6035dca0>, params: {"authenticity_token"=>"[FILTERED]", "author"=>{"email"=>"calebchris000@gmail.com", "name"=>"Caleb Nwaizu", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up", "controller"=>"devise/registrations", "action"=>"create"} }[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuthor Exists? (4.0ms)[0m  [1m[34mSELECT 1 AS one FROM "authors" WHERE "authors"."email" = $1 LIMIT $2[0m  [["email", "calebchris000@gmail.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 0.6ms | Allocations: 395)
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 78)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 4.0ms | Allocations: 2305)
+  Rendered layout layouts/application.html.erb (Duration: 13.0ms | Allocations: 4434)
+Completed 422 Unprocessable Entity in 303ms (Views: 14.5ms | ActiveRecord: 4.6ms | Allocations: 10242)
+
+
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 18:46:44 +0100
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 0.1ms | Allocations: 17)
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 99)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 3.1ms | Allocations: 1548)
+  Rendered layout layouts/application.html.erb (Duration: 52.5ms | Allocations: 14924)
+Completed 200 OK in 77ms (Views: 54.3ms | ActiveRecord: 12.7ms | Allocations: 19432)
+
+
+Started POST "/authors" for 127.0.0.1 at 2023-06-20 18:46:58 +0100
+Processing by Devise::RegistrationsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "author"=>{"email"=>"calebchris000@gmail.com", "name"=>"Caleb Nwaizu", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuthor Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "authors" WHERE "authors"."email" = $1 LIMIT $2[0m  [["email", "calebchris000@gmail.com"], ["LIMIT", 1]]
+  [1m[36mAuthor Create (1.5ms)[0m  [1m[32mINSERT INTO "authors" ("name", "photo", "bio", "timestamp", "post_counter", "created_at", "updated_at", "email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING "id"[0m  [["name", "Caleb Nwaizu"], ["photo", nil], ["bio", nil], ["timestamp", nil], ["post_counter", 0], ["created_at", "2023-06-20 17:46:59.116058"], ["updated_at", "2023-06-20 17:46:59.116058"], ["email", "calebchris000@gmail.com"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil]]
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:3000/authors
+Completed 303 See Other in 279ms (ActiveRecord: 3.1ms | Allocations: 7716)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:46:59 +0100
+Processing by AuthorsController#index as TURBO_STREAM
+Completed 500 Internal Server Error in 5ms (ActiveRecord: 0.0ms | Allocations: 523)
+
+
+  
+NameError (undefined local variable or method `resource_class' for #<AuthorsController:0x0000000001e460>):
+  
+app/controllers/application_controller.rb:8:in `configure_signup_params'
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 18:50:39 +0100
+Processing by Devise::RegistrationsController#new as HTML
+  [1m[36mAuthor Load (0.5ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 ORDER BY "authors"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+Redirected to http://127.0.0.1:3000/
+Filter chain halted as :require_no_authentication rendered or redirected
+Completed 302 Found in 21ms (ActiveRecord: 6.3ms | Allocations: 5627)
+
+
+Started GET "/" for 127.0.0.1 at 2023-06-20 18:50:42 +0100
+Processing by Rails::WelcomeController#index as HTML
+  Rendering C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/railties-7.0.5/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered C:/Ruby32-x64/lib/ruby/gems/3.2.0/gems/railties-7.0.5/lib/rails/templates/rails/welcome/index.html.erb (Duration: 1.5ms | Allocations: 275)
+Completed 200 OK in 10ms (Views: 3.7ms | ActiveRecord: 0.0ms | Allocations: 850)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:50:48 +0100
+Processing by AuthorsController#index as HTML
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 ORDER BY "authors"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering authors/index.html.erb within layouts/application
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors"[0m
+  ↳ app/views/authors/shared/_users.html.erb:1
+  [1m[36mPost Load (2.8ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."author_id" = $1[0m  [["author_id", 1]]
+  ↳ app/views/authors/shared/_users.html.erb:10
+  Rendered authors/shared/_users.html.erb (Duration: 15.8ms | Allocations: 2574)
+  Rendered authors/index.html.erb within layouts/application (Duration: 25.2ms | Allocations: 3691)
+  Rendered layout layouts/application.html.erb (Duration: 66.2ms | Allocations: 16644)
+Completed 200 OK in 135ms (Views: 67.8ms | ActiveRecord: 5.6ms | Allocations: 21884)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:51:13 +0100
+Processing by AuthorsController#index as HTML
+  [1m[36mAuthor Load (0.5ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 ORDER BY "authors"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering authors/index.html.erb within layouts/application
+  [1m[36mAuthor Load (1.0ms)[0m  [1m[34mSELECT "authors".* FROM "authors"[0m
+  ↳ app/views/authors/shared/_users.html.erb:1
+  [1m[36mPost Load (0.5ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."author_id" = $1[0m  [["author_id", 1]]
+  ↳ app/views/authors/shared/_users.html.erb:10
+  Rendered authors/shared/_users.html.erb (Duration: 11.7ms | Allocations: 2330)
+  Rendered authors/index.html.erb within layouts/application (Duration: 17.5ms | Allocations: 3242)
+  Rendered layout layouts/application.html.erb (Duration: 61.3ms | Allocations: 16196)
+Completed 200 OK in 100ms (Views: 59.5ms | ActiveRecord: 12.6ms | Allocations: 24700)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:51:31 +0100
+Processing by AuthorsController#index as HTML
+Completed 401 Unauthorized in 4ms (ActiveRecord: 0.0ms | Allocations: 183)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:51:31 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.3ms | Allocations: 156)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 5.8ms | Allocations: 1660)
+  Rendered layout layouts/application.html.erb (Duration: 14.4ms | Allocations: 3862)
+Completed 200 OK in 26ms (Views: 21.1ms | ActiveRecord: 0.0ms | Allocations: 5103)
+
+
+Started POST "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:51:56 +0100
+Processing by Devise::SessionsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "author"=>{"email"=>"calebchris000@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mAuthor Load (0.5ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."email" = $1 ORDER BY "authors"."id" ASC LIMIT $2[0m  [["email", "calebchris000@gmail.com"], ["LIMIT", 1]]
+Redirected to http://127.0.0.1:3000/authors
+Completed 303 See Other in 437ms (ActiveRecord: 0.5ms | Allocations: 15464)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:51:56 +0100
+Processing by AuthorsController#index as TURBO_STREAM
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 ORDER BY "authors"."id" ASC LIMIT $2[0m  [["id", 1], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering authors/index.html.erb within layouts/application
+  [1m[36mAuthor Load (0.5ms)[0m  [1m[34mSELECT "authors".* FROM "authors"[0m
+  ↳ app/views/authors/shared/_users.html.erb:1
+  [1m[36mPost Load (0.5ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."author_id" = $1[0m  [["author_id", 1]]
+  ↳ app/views/authors/shared/_users.html.erb:10
+  Rendered authors/shared/_users.html.erb (Duration: 7.9ms | Allocations: 1727)
+  Rendered authors/index.html.erb within layouts/application (Duration: 11.9ms | Allocations: 2616)
+  Rendered layout layouts/application.html.erb (Duration: 17.3ms | Allocations: 4367)
+Completed 200 OK in 25ms (Views: 17.3ms | ActiveRecord: 1.3ms | Allocations: 6057)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:52:03 +0100
+Processing by AuthorsController#index as HTML
+Completed 401 Unauthorized in 4ms (ActiveRecord: 0.0ms | Allocations: 169)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:52:03 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.0ms | Allocations: 1210)
+  Rendered layout layouts/application.html.erb (Duration: 14.5ms | Allocations: 3338)
+Completed 200 OK in 20ms (Views: 15.8ms | ActiveRecord: 0.0ms | Allocations: 3999)
+
+
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 18:52:05 +0100
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 0.0ms | Allocations: 16)
+  Rendered devise/shared/_links.html.erb (Duration: 0.3ms | Allocations: 98)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 8.4ms | Allocations: 1514)
+  Rendered layout layouts/application.html.erb (Duration: 18.0ms | Allocations: 3750)
+Completed 200 OK in 24ms (Views: 20.2ms | ActiveRecord: 0.0ms | Allocations: 4755)
+
+
+Started POST "/authors" for 127.0.0.1 at 2023-06-20 18:52:15 +0100
+Processing by Devise::RegistrationsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "author"=>{"email"=>"calebchris000@gmail.com", "name"=>"MIKE", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuthor Exists? (0.6ms)[0m  [1m[34mSELECT 1 AS one FROM "authors" WHERE "authors"."email" = $1 LIMIT $2[0m  [["email", "calebchris000@gmail.com"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 0.6ms | Allocations: 445)
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 78)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 4.8ms | Allocations: 2363)
+  Rendered layout layouts/application.html.erb (Duration: 13.7ms | Allocations: 4523)
+Completed 422 Unprocessable Entity in 286ms (Views: 15.0ms | ActiveRecord: 1.2ms | Allocations: 9868)
+
+
+Started POST "/authors" for 127.0.0.1 at 2023-06-20 18:52:28 +0100
+Processing by Devise::RegistrationsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "author"=>{"email"=>"mike@mail", "name"=>"MIKE", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuthor Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "authors" WHERE "authors"."email" = $1 LIMIT $2[0m  [["email", "mike@mail"], ["LIMIT", 1]]
+  [1m[36mAuthor Create (0.5ms)[0m  [1m[32mINSERT INTO "authors" ("name", "photo", "bio", "timestamp", "post_counter", "created_at", "updated_at", "email", "encrypted_password", "reset_password_token", "reset_password_sent_at", "remember_created_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING "id"[0m  [["name", "MIKE"], ["photo", nil], ["bio", nil], ["timestamp", nil], ["post_counter", 0], ["created_at", "2023-06-20 17:52:29.007534"], ["updated_at", "2023-06-20 17:52:29.007534"], ["email", "mike@mail"], ["encrypted_password", "[FILTERED]"], ["reset_password_token", "[FILTERED]"], ["reset_password_sent_at", "[FILTERED]"], ["remember_created_at", nil]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT[0m
+Redirected to http://127.0.0.1:3000/authors
+Completed 303 See Other in 276ms (ActiveRecord: 1.7ms | Allocations: 5898)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:52:29 +0100
+Processing by AuthorsController#index as TURBO_STREAM
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 ORDER BY "authors"."id" ASC LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering authors/index.html.erb within layouts/application
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors"[0m
+  ↳ app/views/authors/shared/_users.html.erb:1
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."author_id" = $1[0m  [["author_id", 1]]
+  ↳ app/views/authors/shared/_users.html.erb:10
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."author_id" = $1[0m  [["author_id", 2]]
+  ↳ app/views/authors/shared/_users.html.erb:10
+  Rendered authors/shared/_users.html.erb (Duration: 9.4ms | Allocations: 2634)
+  Rendered authors/index.html.erb within layouts/application (Duration: 16.6ms | Allocations: 3484)
+  Rendered layout layouts/application.html.erb (Duration: 24.2ms | Allocations: 5230)
+Completed 200 OK in 33ms (Views: 24.0ms | ActiveRecord: 1.6ms | Allocations: 6898)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 18:52:41 +0100
+Processing by AuthorsController#index as HTML
+Completed 401 Unauthorized in 4ms (ActiveRecord: 0.0ms | Allocations: 169)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:52:41 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.3ms | Allocations: 1210)
+  Rendered layout layouts/application.html.erb (Duration: 14.8ms | Allocations: 3338)
+Completed 200 OK in 20ms (Views: 16.1ms | ActiveRecord: 0.0ms | Allocations: 3979)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:54:56 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.2ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 56.6ms | Allocations: 4839)
+Completed 200 OK in 63ms (Views: 58.4ms | ActiveRecord: 0.0ms | Allocations: 5492)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:55:13 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.1ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 53.0ms | Allocations: 4838)
+Completed 200 OK in 64ms (Views: 59.9ms | ActiveRecord: 0.0ms | Allocations: 5476)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:55:31 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.3ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 45.6ms | Allocations: 4883)
+Completed 200 OK in 62ms (Views: 56.4ms | ActiveRecord: 0.0ms | Allocations: 5554)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:55:44 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.3ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 3.3ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 51.4ms | Allocations: 4859)
+Completed 200 OK in 59ms (Views: 53.4ms | ActiveRecord: 0.0ms | Allocations: 5525)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:56:02 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.2ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 46.6ms | Allocations: 4851)
+Completed 200 OK in 55ms (Views: 51.2ms | ActiveRecord: 0.0ms | Allocations: 5504)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:56:05 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 1.9ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 14.0ms | Allocations: 3334)
+Completed 200 OK in 20ms (Views: 15.1ms | ActiveRecord: 0.0ms | Allocations: 3993)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:56:16 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.3ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 55.8ms | Allocations: 4851)
+Completed 200 OK in 63ms (Views: 57.4ms | ActiveRecord: 0.0ms | Allocations: 5513)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:57:53 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 3.8ms | Allocations: 569)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 40.6ms | Allocations: 2091)
+  Rendered layout layouts/application.html.erb (Duration: 92.1ms | Allocations: 6027)
+Completed 200 OK in 134ms (Views: 128.8ms | Allocations: 7336)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:58:09 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 1.9ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 41.6ms | Allocations: 4856)
+Completed 200 OK in 57ms (Views: 52.3ms | Allocations: 5506)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:58:24 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.3ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.6ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 49.4ms | Allocations: 4857)
+Completed 200 OK in 76ms (Views: 68.0ms | Allocations: 5536)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:58:37 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.5ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.3ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 54.1ms | Allocations: 4885)
+Completed 200 OK in 68ms (Views: 61.1ms | Allocations: 5527)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:58:49 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.4ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 48.9ms | Allocations: 4863)
+Completed 200 OK in 58ms (Views: 54.2ms | Allocations: 5509)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:58:57 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.9ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 54.6ms | Allocations: 4858)
+Completed 200 OK in 63ms (Views: 58.5ms | Allocations: 5501)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:59:14 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.3ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.7ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 60.6ms | Allocations: 4852)
+Completed 200 OK in 71ms (Views: 61.9ms | Allocations: 5535)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:59:31 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 2.8ms | Allocations: 569)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 25.8ms | Allocations: 2087)
+  Rendered layout layouts/application.html.erb (Duration: 36.6ms | Allocations: 4508)
+Completed 200 OK in 56ms (Views: 52.2ms | Allocations: 5832)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 18:59:42 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.1ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 53.2ms | Allocations: 4832)
+Completed 200 OK in 59ms (Views: 54.3ms | Allocations: 5485)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:00:05 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.3ms | Allocations: 132)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 32.1ms | Allocations: 1206)
+  Rendered layout layouts/application.html.erb (Duration: 168.9ms | Allocations: 4852)
+Completed 200 OK in 315ms (Views: 308.3ms | Allocations: 5516)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:01:42 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 60.3ms | Allocations: 1602)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 65.7ms | Allocations: 3120)
+  Rendered layout layouts/application.html.erb (Duration: 66.5ms | Allocations: 3203)
+Completed 500 Internal Server Error in 84ms (Allocations: 4480)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <%- if controller_name != 'sessions' %>
+  <%= link_to "Log in", new_session_path(resource_name) %><br />
+<% end %>
+
+<%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+  <%= link_to "Sign up", class: "sign-up!", new_registration_path(resource_name) %><br />
+<% end %>
+
+<%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+  <%= link_to "Forgot your password?", new_password_path(resource_name) %><br />
+<% end %>
+
+<%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+  <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %><br />
+<% end %>
+
+<%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+  <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %><br />
+<% end %>
+
+<%- if devise_mapping.omniauthable? %>
+  <%- resource_class.omniauth_providers.each do |provider| %>
+    <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false } %><br />
+  <% end %>
+<% end %>
+
+):
+1:    <%- if controller_name != 'sessions' %>
+2:      <%= link_to "Log in", new_session_path(resource_name) %><br />
+3:    <% end %>
+4:    
+5:    <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+6:      <%= link_to "Sign up", class: "sign-up!", new_registration_path(resource_name) %><br />
+7:    <% end %>
+8:    
+9:    <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+10:      <%= link_to "Forgot your password?", new_password_path(resource_name) %><br />
+11:    <% end %>
+12:    
+13:    <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+14:      <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %><br />
+15:    <% end %>
+16:    
+17:    <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+18:      <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %><br />
+19:    <% end %>
+20:    
+21:    <%- if devise_mapping.omniauthable? %>
+22:      <%- resource_class.omniauth_providers.each do |provider| %>
+23:        <%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false } %><br />
+24:      <% end %>
+25:    <% end %>
+  
+app/views/devise/shared/_links.html.erb:6: syntax error, unexpected ')', expecting =>
+app/views/devise/shared/_links.html.erb:6: syntax error, unexpected ')', expecting =>
+app/views/devise/shared/_links.html.erb:6: syntax error, unexpected ')', expecting =>
+app/views/devise/shared/_links.html.erb:6: syntax error, unexpected ')', expecting =>
+app/views/devise/shared/_links.html.erb:6: syntax error, unexpected ')', expecting =>
+app/views/devise/shared/_links.html.erb:6: syntax error, unexpected ')', expecting =>
+app/views/devise/sessions/new.html.erb:26
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:04:14 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 133.6ms | Allocations: 585)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 140.7ms | Allocations: 2101)
+  Rendered layout layouts/application.html.erb (Duration: 154.5ms | Allocations: 4556)
+Completed 200 OK in 186ms (Views: 181.0ms | Allocations: 5846)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:04:51 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 56.7ms | Allocations: 585)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 63.2ms | Allocations: 2101)
+  Rendered layout layouts/application.html.erb (Duration: 106.8ms | Allocations: 6024)
+Completed 200 OK in 130ms (Views: 125.3ms | Allocations: 7325)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:05:26 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 143)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 1.9ms | Allocations: 1217)
+  Rendered layout layouts/application.html.erb (Duration: 50.2ms | Allocations: 4854)
+Completed 200 OK in 59ms (Views: 54.2ms | Allocations: 5492)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:07:11 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 1.6ms | Allocations: 584)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 8.1ms | Allocations: 2100)
+  Rendered layout layouts/application.html.erb (Duration: 23.8ms | Allocations: 4568)
+Completed 200 OK in 43ms (Views: 36.8ms | Allocations: 5874)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:07:40 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 1.9ms | Allocations: 584)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 7.1ms | Allocations: 2100)
+  Rendered layout layouts/application.html.erb (Duration: 67.3ms | Allocations: 6069)
+Completed 200 OK in 89ms (Views: 82.6ms | Allocations: 7376)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:08:15 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 4.2ms | Allocations: 584)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 27.0ms | Allocations: 2108)
+  Rendered layout layouts/application.html.erb (Duration: 36.9ms | Allocations: 4548)
+Completed 200 OK in 56ms (Views: 51.6ms | Allocations: 5842)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:08:27 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 143)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 1.9ms | Allocations: 1217)
+  Rendered layout layouts/application.html.erb (Duration: 51.1ms | Allocations: 4880)
+Completed 200 OK in 59ms (Views: 54.6ms | Allocations: 5551)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:09:33 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 59.0ms | Allocations: 599)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 64.1ms | Allocations: 2118)
+  Rendered layout layouts/application.html.erb (Duration: 100.7ms | Allocations: 6060)
+Completed 200 OK in 133ms (Views: 128.4ms | Allocations: 7366)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:09:48 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.4ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.6ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 43.8ms | Allocations: 4859)
+Completed 200 OK in 65ms (Views: 57.8ms | Allocations: 5512)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:11:32 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.8ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 4.3ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 44.6ms | Allocations: 4884)
+Completed 200 OK in 58ms (Views: 53.3ms | Allocations: 5545)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:12:00 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 1.7ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 39.6ms | Allocations: 4878)
+Completed 200 OK in 57ms (Views: 53.2ms | Allocations: 5524)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:12:19 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.6ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.7ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 48.7ms | Allocations: 4917)
+Completed 200 OK in 60ms (Views: 56.0ms | Allocations: 5578)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:12:45 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 1.9ms | Allocations: 598)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 27.3ms | Allocations: 2124)
+  Rendered layout layouts/application.html.erb (Duration: 44.5ms | Allocations: 4623)
+Completed 200 OK in 64ms (Views: 57.9ms | Allocations: 5940)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:13:07 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.2ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 41.2ms | Allocations: 4895)
+Completed 200 OK in 62ms (Views: 55.9ms | Allocations: 5551)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:13:33 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.2ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 56.2ms | Allocations: 4887)
+Completed 200 OK in 64ms (Views: 57.5ms | Allocations: 5551)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:14:20 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.6ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 3.7ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 51.4ms | Allocations: 4893)
+Completed 200 OK in 61ms (Views: 56.4ms | Allocations: 5557)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:15:09 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.3ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.3ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 44.1ms | Allocations: 4866)
+Completed 200 OK in 55ms (Views: 51.2ms | Allocations: 5539)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:15:23 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.7ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 38.5ms | Allocations: 4888)
+Completed 200 OK in 59ms (Views: 55.1ms | Allocations: 5546)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:15:34 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.2ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 41.5ms | Allocations: 4913)
+Completed 200 OK in 55ms (Views: 50.5ms | Allocations: 5580)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:15:48 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 1.6ms | Allocations: 598)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 27.1ms | Allocations: 2125)
+  Rendered layout layouts/application.html.erb (Duration: 41.5ms | Allocations: 4573)
+Completed 200 OK in 62ms (Views: 55.6ms | Allocations: 5893)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:16:01 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 1.9ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 46.4ms | Allocations: 4889)
+Completed 200 OK in 57ms (Views: 52.1ms | Allocations: 5545)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:16:09 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.2ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 35.9ms | Allocations: 4881)
+Completed 200 OK in 64ms (Views: 59.8ms | Allocations: 5527)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:16:21 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.9ms | Allocations: 1228)
+  Rendered layout layouts/application.html.erb (Duration: 55.4ms | Allocations: 4889)
+Completed 200 OK in 61ms (Views: 56.8ms | Allocations: 5565)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:17:54 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 20.2ms | Allocations: 1352)
+  Rendered layout layouts/application.html.erb (Duration: 21.1ms | Allocations: 1435)
+Completed 500 Internal Server Error in 40ms (Allocations: 2707)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <h2>Log in</h2>
+<section class="register">
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)), , html: { class: "form" }) do |f| %>
+  <div class="field fieldEmail">
+    <%= f.label :email %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
+
+  <div class="field fieldPassword">
+    <%= f.label :password %>
+    <%= f.password_field :password, autocomplete: "current-password" %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class=" remember">
+      <%= f.label :remember_me %>
+      <%= f.check_box :remember_me %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Log in" %>
+  </div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+<section class="register">
+
+):
+1:    <h2>Log in</h2>
+2:    <section class="register">
+3:    
+4:    <%= form_for(resource, as: resource_name, url: session_path(resource_name)), , html: { class: "form" }) do |f| %>
+5:      <div class="field fieldEmail">
+6:        <%= f.label :email %>
+7:        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+8:      </div>
+9:    
+10:      <div class="field fieldPassword">
+11:        <%= f.label :password %>
+12:        <%= f.password_field :password, autocomplete: "current-password" %>
+13:      </div>
+14:    
+15:      <% if devise_mapping.rememberable? %>
+16:        <div class=" remember">
+17:          <%= f.label :remember_me %>
+18:          <%= f.check_box :remember_me %>
+19:        </div>
+20:      <% end %>
+21:    
+22:      <div class="actions">
+23:        <%= f.submit "Log in" %>
+24:      </div>
+25:    <% end %>
+26:    
+27:    <%= render "devise/shared/links" %>
+28:    <section class="register">
+  
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected ','
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected ','
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected ','
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected ','
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected ','
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected ','
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:18:08 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 18.8ms | Allocations: 1352)
+  Rendered layout layouts/application.html.erb (Duration: 19.8ms | Allocations: 1435)
+Completed 500 Internal Server Error in 39ms (Allocations: 2708)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <h2>Log in</h2>
+<section class="register">
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)), html: { class: "form" }) do |f| %>
+  <div class="field fieldEmail">
+    <%= f.label :email %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
+
+  <div class="field fieldPassword">
+    <%= f.label :password %>
+    <%= f.password_field :password, autocomplete: "current-password" %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class=" remember">
+      <%= f.label :remember_me %>
+      <%= f.check_box :remember_me %>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit "Log in" %>
+  </div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+<section class="register">
+
+):
+1:    <h2>Log in</h2>
+2:    <section class="register">
+3:    
+4:    <%= form_for(resource, as: resource_name, url: session_path(resource_name)), html: { class: "form" }) do |f| %>
+5:      <div class="field fieldEmail">
+6:        <%= f.label :email %>
+7:        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+8:      </div>
+9:    
+10:      <div class="field fieldPassword">
+11:        <%= f.label :password %>
+12:        <%= f.password_field :password, autocomplete: "current-password" %>
+13:      </div>
+14:    
+15:      <% if devise_mapping.rememberable? %>
+16:        <div class=" remember">
+17:          <%= f.label :remember_me %>
+18:          <%= f.check_box :remember_me %>
+19:        </div>
+20:      <% end %>
+21:    
+22:      <div class="actions">
+23:        <%= f.submit "Log in" %>
+24:      </div>
+25:    <% end %>
+26:    
+27:    <%= render "devise/shared/links" %>
+28:    <section class="register">
+  
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected label
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected label
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected label
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected label
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected label
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+app/views/devise/sessions/new.html.erb:4: syntax error, unexpected label
+app/views/devise/sessions/new.html.erb:31: syntax error, unexpected `end'
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:18:44 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 1.9ms | Allocations: 598)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 25.6ms | Allocations: 2124)
+  Rendered layout layouts/application.html.erb (Duration: 61.6ms | Allocations: 6103)
+Completed 200 OK in 87ms (Views: 82.9ms | Allocations: 7398)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:18:58 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 1.9ms | Allocations: 1229)
+  Rendered layout layouts/application.html.erb (Duration: 54.3ms | Allocations: 4889)
+Completed 200 OK in 64ms (Views: 57.2ms | Allocations: 5527)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:19:53 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 1.9ms | Allocations: 1229)
+  Rendered layout layouts/application.html.erb (Duration: 36.9ms | Allocations: 4891)
+Completed 200 OK in 54ms (Views: 49.6ms | Allocations: 5540)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:20:03 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.3ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.9ms | Allocations: 1229)
+  Rendered layout layouts/application.html.erb (Duration: 57.6ms | Allocations: 4885)
+Completed 200 OK in 70ms (Views: 65.1ms | Allocations: 5534)
+
+
+Started POST "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:20:09 +0100
+Processing by Devise::SessionsController#create as TURBO_STREAM
+  Parameters: {"authenticity_token"=>"[FILTERED]", "author"=>{"email"=>"mike@mail", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+  [1m[36mAuthor Load (3.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."email" = $1 ORDER BY "authors"."id" ASC LIMIT $2[0m  [["email", "mike@mail"], ["LIMIT", 1]]
+Redirected to http://127.0.0.1:3000/authors
+Completed 303 See Other in 408ms (ActiveRecord: 19.0ms | Allocations: 5669)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 19:20:10 +0100
+Processing by AuthorsController#index as TURBO_STREAM
+  [1m[36mAuthor Load (0.4ms)[0m  [1m[34mSELECT "authors".* FROM "authors" WHERE "authors"."id" = $1 ORDER BY "authors"."id" ASC LIMIT $2[0m  [["id", 2], ["LIMIT", 1]]
+  Rendering layout layouts/application.html.erb
+  Rendering authors/index.html.erb within layouts/application
+  [1m[36mAuthor Load (0.5ms)[0m  [1m[34mSELECT "authors".* FROM "authors"[0m
+  ↳ app/views/authors/shared/_users.html.erb:1
+  [1m[36mPost Load (4.8ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."author_id" = $1[0m  [["author_id", 1]]
+  ↳ app/views/authors/shared/_users.html.erb:10
+  [1m[36mPost Load (0.5ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."author_id" = $1[0m  [["author_id", 2]]
+  ↳ app/views/authors/shared/_users.html.erb:10
+  Rendered authors/shared/_users.html.erb (Duration: 17.5ms | Allocations: 2842)
+  Rendered authors/index.html.erb within layouts/application (Duration: 27.9ms | Allocations: 3998)
+  Rendered layout layouts/application.html.erb (Duration: 34.3ms | Allocations: 5803)
+Completed 200 OK in 55ms (Views: 36.7ms | ActiveRecord: 6.2ms | Allocations: 7818)
+
+
+Started GET "/authors" for 127.0.0.1 at 2023-06-20 19:20:21 +0100
+Processing by AuthorsController#index as HTML
+Completed 401 Unauthorized in 6ms (ActiveRecord: 0.0ms | Allocations: 169)
+
+
+Started GET "/authors/sign_in" for 127.0.0.1 at 2023-06-20 19:20:21 +0100
+Processing by Devise::SessionsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 154)
+  Rendered devise/sessions/new.html.erb within layouts/application (Duration: 2.2ms | Allocations: 1233)
+  Rendered layout layouts/application.html.erb (Duration: 13.9ms | Allocations: 3362)
+Completed 200 OK in 20ms (Views: 15.3ms | ActiveRecord: 0.0ms | Allocations: 4009)
+
+
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 19:20:23 +0100
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 1.3ms | Allocations: 225)
+  Rendered devise/shared/_links.html.erb (Duration: 0.2ms | Allocations: 88)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 7.5ms | Allocations: 2148)
+  Rendered layout layouts/application.html.erb (Duration: 17.7ms | Allocations: 4347)
+Completed 200 OK in 30ms (Views: 25.6ms | ActiveRecord: 0.0ms | Allocations: 5314)
+
+
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 19:21:17 +0100
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 1.7ms | Allocations: 225)
+  Rendered devise/shared/_links.html.erb (Duration: 55.8ms | Allocations: 535)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 68.1ms | Allocations: 2652)
+  Rendered layout layouts/application.html.erb (Duration: 79.4ms | Allocations: 5073)
+Completed 200 OK in 99ms (Views: 92.7ms | ActiveRecord: 0.0ms | Allocations: 6326)
+
+
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 19:21:41 +0100
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 1.6ms | Allocations: 225)
+  Rendered devise/shared/_links.html.erb (Duration: 61.6ms | Allocations: 535)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 74.8ms | Allocations: 2651)
+  Rendered layout layouts/application.html.erb (Duration: 87.9ms | Allocations: 5072)
+Completed 200 OK in 107ms (Views: 100.8ms | ActiveRecord: 0.0ms | Allocations: 6331)
+
+
+Started GET "/authors/sign_up" for 127.0.0.1 at 2023-06-20 19:21:43 +0100
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (Duration: 0.1ms | Allocations: 14)
+  Rendered devise/shared/_links.html.erb (Duration: 0.1ms | Allocations: 89)
+  Rendered devise/registrations/new.html.erb within layouts/application (Duration: 2.8ms | Allocations: 1421)
+  Rendered layout layouts/application.html.erb (Duration: 13.9ms | Allocations: 3549)
+Completed 200 OK in 22ms (Views: 15.3ms | ActiveRecord: 0.0ms | Allocations: 4139)
+
+
