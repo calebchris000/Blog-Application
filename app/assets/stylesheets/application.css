@@ -171,13 +171,13 @@ h2 {
   font-weight: 600;
 }
 
-.field, .actions {
+.field,
+.actions {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   width: 50%;
 }
-
 
 .remember {
   /* display: inline; */
@@ -188,8 +188,8 @@ h2 {
   align-items: center;
 }
 
-
-.sign-up, .forgot {
+.sign-up,
+.forgot {
   text-align: center;
   margin: 0 auto;
 }
@@ -206,5 +206,6 @@ h2 {
   width: 60%;
   gap: 5px;
   margin: 0 auto;
+
   /* margin-top: 20%; */
 }
